@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" version="3.0" group="content" method="upgrade">
+	<name>PLG_CONTENT_EXG</name>
+	<author>Nicolas Ogier</author>
+	<creationDate>1-May-2013</creationDate>
+    <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
+    <authorEmail>webmaster@nicolas-ogier.fr</authorEmail>
+    <authorUrl>http://www.nicolas-ogier.fr/</authorUrl>
+    <version>3-1.0</version>
+    <description>PLG_CONTENT_EXG_XML_DESCRIPTION</description>
+    <files>
+    	<filename plugin="exg">exg.php"</filename>
+    	<filename plugin="exg">index.html</filename>
+    	<folder plugin="exg">plugin_exg</folder>
+    </files>
+  	<languages>
+  		<language tag="en-GB">language/en-GB/en-GB.plg_content_exg.ini</language>
+  		<language tag="en-GB">language/en-GB/en-GB.plg_content_exg.sys.ini</language>
+  	</languages>
+  	<config>
+  		<fields>
+  			 <fieldset name="EXG_GALLERY">
+  			 	<field name="path_root" type="text" default="images" description="PLG_CONTENT_EXG_PATH_DESCRIPTION" label="PLG_CONTENT_EXG_PATH_LABEL" />
+  			 </fieldset>
+  		</fields>
+  	</config>	  
+</extension>
