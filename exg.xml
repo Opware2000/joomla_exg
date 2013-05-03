@@ -18,7 +18,7 @@
   		<language tag="en-GB">language/en-GB/en-GB.plg_content_exg.sys.ini</language>
   	</languages>
   	<config>
-  		<fields>
+  		<fields name="params">
   			 <fieldset name="EXG_GALLERY_PARAMETERS">
   			 	<field name="path_root" type="text" default="images" description="PLG_CONTENT_EXG_PATH_DESCRIPTION" label="PLG_CONTENT_EXG_PATH_LABEL" />
   				<field name="exg_tag" type="text" default="gallery" description="PLG_CONTENT_EXG_TAG_DESCRIPTION" label="PLG_CONTENT_EXG_TAG_LABEL" />
