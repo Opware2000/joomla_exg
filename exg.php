@@ -28,6 +28,7 @@ class PlgContentEXG extends JPlugin
 	protected $_tag_gallery = 'gallery';
 	protected $_live_site;
 	protected $_absolute_path;
+//	protected $_html;
 	
 	function __construct(&$subject, $params) {
 		$app = JFactory::getApplication();
@@ -51,6 +52,8 @@ class PlgContentEXG extends JPlugin
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
+		//initialisation
+		//$this->_html = '';
 	}
 	public function onContentPrepare($context, &$article, &$params, $limitstart=0) 
 	{
@@ -60,11 +63,20 @@ class PlgContentEXG extends JPlugin
 			return true;
 		}
 		// simple performance check to determine whether bot should process further
-		if (strpos($article->text, 'gallery') === false && strpos($article->text, '/gallery') === false)
+		if (strpos($article->text, $this->_tag_gallery) === false && strpos($article->text, '/'.$this->_tag_gallery) === false)
 		{
 			return true;
 		}
-		
-		
+		// 
+		$html='';
+		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
+		{
+			$langue = JFactory::getLanguage()->getTag();
+			foreach($matches[0] as $match)
+			{
+				$html .= '<pre>'.$match.'</pre><br />';
+			}
+		}
+		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
 }
