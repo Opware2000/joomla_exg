@@ -9,7 +9,7 @@
     <version>3-1.0</version>
     <description>PLG_CONTENT_EXG_XML_DESCRIPTION</description>
     <files>
-    	<filename plugin="exg">exg.php"</filename>
+    	<filename plugin="exg">exg.php</filename>
     	<filename plugin="exg">index.html</filename>
     	<folder plugin="exg">plugin_exg</folder>
     </files>
