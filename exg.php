@@ -78,16 +78,23 @@ class PlgContentEXG extends JPlugin
 		$html='';
 		// Include the plugin files
 		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
+		//Import filesystem libraries. Perhaps not necessary, but does not hurt
+jimport('joomla.filesystem.file');
 		//On calcule le texte à remplacer.
 		unset( $galerie );
+		$this->_debugMessage['galeries']=array();
 		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
+			$i=1;
 			foreach($matches[1] as $match)
 			{
-				$html .= '<pre>'.$match.'</pre><br />';
+				$html .= '<pre>'.$match."\n".print_r($this->listePath( $this->_absolute_path.'/images/'.$match),true).'</pre><br />';
+				$this->_debugMessage['galeries'][$i]=$match;
+				$i++;
 			}
+			
 		}
 		//traitement si débug.
 		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
@@ -114,5 +121,8 @@ class PlgContentEXG extends JPlugin
 	 		$chemin = substr($chemin, 0, -1);
 	 	}
 	 	return($chemin);
+	 }
+	 private function listePath($searchpath) {
+	 return(JFolder::files($searchpath, '.jpg'));
 	 }
 }
