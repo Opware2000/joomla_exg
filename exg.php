@@ -28,6 +28,7 @@ class PlgContentEXG extends JPlugin
 	protected $_tag_gallery = 'gallery';
 	protected $_live_site;
 	protected $_absolute_path;
+	protected $_parametres;
 //	protected $_html;
 	
 	function __construct(&$subject, $params) {
@@ -52,23 +53,29 @@ class PlgContentEXG extends JPlugin
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
+		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path);
 		//initialisation
 		//$this->_html = '';
 	}
 	public function onContentPrepare($context, &$article, &$params, $limitstart=0) 
 	{
-		// Don't run this plugin when the content is being indexed
+		// Ne pas utiliser ce plugin lorsque le contenu est indexé
 		if ($context === 'com_finder.indexer')
 		{
 			return true;
 		}
-		// simple performance check to determine whether bot should process further
+		// Vérification simple si le plugin a quelque chose à traiter
 		if (strpos($article->text, $this->_tag_gallery) === false && strpos($article->text, '/'.$this->_tag_gallery) === false)
 		{
 			return true;
 		}
-		// 
+		// Oui il y a bien le tag alors on continue
 		$html='';
+		// Include the plugin files
+		include_once( dirname( __FILE__ ).'/plugin_exg.class.exg.php' );
+		//On calcule le texte à remplacer.
+		unset( $galerie );
+		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
@@ -77,6 +84,8 @@ class PlgContentEXG extends JPlugin
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
 		}
+		$html .= $galerie;
+		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
 }
