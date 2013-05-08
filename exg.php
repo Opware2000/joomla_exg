@@ -5,7 +5,7 @@
  * @author 		Nicolas Ogier {@link http://www.nicolas-ogier.fr}
  * @version 	3-1.0	2013-05-01
  * @link 		http://www.nicolas-ogier.fr/exg/
- * 
+ *
  * @license 	GNU/GPL http://www.gnu.org/copyleft/gpl.html
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,8 +28,12 @@ class PlgContentEXG extends JPlugin
 	protected $_tag_gallery = 'gallery';
 	protected $_live_site;
 	protected $_absolute_path;
-//	protected $_html;
-	
+	protected $_parametres;
+	private   $_debug;
+	private	  $_debugMessage = array();
+	protected $_pathRoot='images';
+	//	protected $_html;
+
 	function __construct(&$subject, $params) {
 		$app = JFactory::getApplication();
 		if($app->isAdmin())
@@ -41,42 +45,103 @@ class PlgContentEXG extends JPlugin
 		$this->loadLanguage('plg_content_exg', JPATH_ADMINISTRATOR);
 		// on récupere le chemin absolu et l'URL du site
 		$this->_absolute_path = JPATH_SITE;
-		$this->_live_site = JURI::base();
-		if(substr($this->_live_site, -1) == '/')
-		{
-			$this->_live_site = substr($this->_live_site, 0, -1);
-		}
+		$this->_live_site = $this->nettoyageChemin(JURI::base());
+		// Initialisation
+		$this->_debug = true;
 		// on récupère quelques paramètres
-		$tag = $this->params->get('exg_tag', $this->_tag_gallery);
+		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);
+		$root = $this->params->get('path_root', $this->_pathRoot);
+		$root = $this->nettoyageChemin($root);
 		//vérification que le tag est correctement formaté
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
+		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path);
+		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
+		$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
 		//initialisation
 		//$this->_html = '';
 	}
-	public function onContentPrepare($context, &$article, &$params, $limitstart=0) 
+	/**
+	 * Traitement des tags d'appels lors de la préparation du contenu
+	 * @param unknown $context
+	 * @param article de Joomla $article
+	 * @param paramètres du plugin $params
+	 * @param pagination $limitstart
+	 * @return boolean
+	 */
+	public function onContentPrepare($context, &$article, &$params, $limitstart=0)
 	{
-		// Don't run this plugin when the content is being indexed
+		// Ne pas utiliser ce plugin lorsque le contenu est indexé
 		if ($context === 'com_finder.indexer')
 		{
 			return true;
 		}
-		// simple performance check to determine whether bot should process further
+		// Vérification simple si le plugin a quelque chose à traiter
 		if (strpos($article->text, $this->_tag_gallery) === false && strpos($article->text, '/'.$this->_tag_gallery) === false)
 		{
 			return true;
 		}
-		// 
-		$html='';
+		// Oui il y a bien le tag alors on continue
+		$html=''; $i = 0;
+		// Include the plugin files
+		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
+		//On calcule le texte à remplacer.
+		unset( $galerie );
+		$this->_debugMessage['galeries']=array();
+		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
-			foreach($matches[0] as $match)
+			$i=1;
+			foreach($matches[1] as $match)
 			{
-				$html .= '<pre>'.$match.'</pre><br />';
+				$html .= '<pre>Insertion du plugin EXG\n'.$match."\n";
+				$html .= $this->listePath($this->_absolute_path.'/images/'.$match);
+				$html .='</pre><br />';
 			}
+				
 		}
+		//traitement si débug.
+		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
+		$html .= $this->showDebug();
+		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
+	}
+	/**
+	 * Affiche les messages de débuggage entre les balises <pre></pre>
+	 * @return string
+	 */
+	private function showDebug() {
+		$retour_html='';
+		if($this->_debug){
+			$retour_html = '<pre>';
+			foreach ($this->_debugMessage as $k => $v) {
+				$retour_html .= "[$k] => ".print_r($v,true)."\n";
+			}
+			$retour_html .='</pre>';
+		}
+		return( $retour_html);
+	}
+	/**
+	 * Supprime le / en fin de chemin
+	 * @param url $chemin
+	 * @return string
+	 */
+	private function nettoyageChemin($chemin) {
+		if(substr($chemin, -1) == '/')
+		{
+			$chemin = substr($chemin, 0, -1);
+		}
+		return($chemin);
+	}
+	/**
+	 * Liste le contenu du répertoire
+	 * @param unknown $searchpath
+	 */
+	private function listePath($searchpath) {
+		jimport( 'joomla.filesystem.folder' );
+		$searchpath = JPath::clean($searchpath);
+	 return(JFolder::files($searchpath, '.jpg'));
 	}
 }

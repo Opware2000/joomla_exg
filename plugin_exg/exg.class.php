@@ -5,7 +5,7 @@
  * @author 		Nicolas Ogier {@link http://www.nicolas-ogier.fr}
  * @version 	3-1.0	2013-05-01
  * @link 		http://www.nicolas-ogier.fr/exg/
- *
+ * @access 		public
  * @license GNU/GPL
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,5 +22,25 @@
  */
 defined('_JEXEC') or die('Restricted access');
 /**
- * EXG Class file for EXG - Easy eXtended Gallery - plugin for Joomla 3.x
- */
+ * class Easy eXtended Gallery : fournit une API pour Easy eXtended Gallery
+ **/
+class exgClass {
+	public $html;
+	protected $_debug = array();
+	/**
+	 * Constructeur php5
+	 *
+	 * @param array $botArray parametres administrateurs du plugin
+	 * @param array $row article qui appele le plugin
+	 * @void
+	 */
+	function __construct ( &$params, &$row, &$id ) {
+		$this->_debug[] = 'tag = '.$params['TAG'];
+		$this->_debug[] = 'url = '.$params['URL'];
+		$this->_debug[] = 'path ='.$params['PATH'];
+	}
+	
+	function getDebug() {
+		return ( $this->_debug );
+	}
+}
