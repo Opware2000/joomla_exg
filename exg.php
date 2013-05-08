@@ -102,7 +102,7 @@ class PlgContentEXG extends JPlugin
 		if($this->_debug){
 			$retour_html = '<pre>';
 			foreach ($this->_debugMessage as $k => $v) {
-				$retour_html .= "\$a[$k] => $v.\n";
+				$retour_html .= "\[$k] => ".print_r($v,true)."\n";
 			}
 			$retour_html .='</pre>';
 		}
