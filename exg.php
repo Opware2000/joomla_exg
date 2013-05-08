@@ -84,7 +84,7 @@ class PlgContentEXG extends JPlugin
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
-			foreach($matches as $match)
+			foreach($matches[1] as $match)
 			{
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
