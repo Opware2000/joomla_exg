@@ -29,7 +29,9 @@ class PlgContentEXG extends JPlugin
 	protected $_live_site;
 	protected $_absolute_path;
 	protected $_parametres;
-	protected $_debug;
+	private   $_debug;
+	private	  $_debugMessage = array();
+	protected $_pathRoot='images';
 //	protected $_html;
 	
 	function __construct(&$subject, $params) {
@@ -44,19 +46,20 @@ class PlgContentEXG extends JPlugin
 		// on récupere le chemin absolu et l'URL du site
 		$this->_absolute_path = JPATH_SITE;
 		$this->_live_site = JURI::base();
-		if(substr($this->_live_site, -1) == '/')
-		{
-			$this->_live_site = substr($this->_live_site, 0, -1);
-		}
+		$this->_live_site = $this->nettoyageChemin($this->_live_site);
 		// Initialisation
 		$this->_debug = true;
 		// on récupère quelques paramètres
-		$tag = $this->params->get('exg_tag', $this->_tag_gallery);
+		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);
+		$root = $this->params->get('path_root', $this->_pathRoot);
+		$root = $this->nettoyageChemin($root);
 		//vérification que le tag est correctement formaté
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
 		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path);
+		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
+		$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
 		//initialisation
 		//$this->_html = '';
 	}
@@ -87,10 +90,30 @@ class PlgContentEXG extends JPlugin
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
 		}
-		if($this->_debug){
-			$html .= '<pre>'.print_r($galerie->getDebug(), true).'</pre><br />';
-		}
+		//traitement si débug.
+		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
+		$html .= $this->showDebug();
 		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
+	
+	private function showDebug() {
+		$retour_html='';
+		if($this->_debug){
+			$retour_html = '<pre>';
+			foreach ($this->_debugMessage as $k => $v) {
+				$retour_html .= "\$a[$k] => $v.\n";
+			}
+			$retour_html .='</pre>';
+		}
+		return( $retour_html);
+	 }
+	
+	 private function nettoyageChemin($chemin) {
+	 	if(substr($chemin, -1) == '/')
+	 	{
+	 		$chemin = substr($chemin, 0, -1);
+	 	}
+	 	return($chemin);
+	 }
 }
