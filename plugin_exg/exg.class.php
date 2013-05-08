@@ -25,6 +25,7 @@ defined('_JEXEC') or die('Restricted access');
  * class Easy eXtended Gallery : fournit une API pour Easy eXtended Gallery
  **/
 class exgClass {
+	var $html;
 	/**
 	 * Constructeur php5
 	 *
@@ -33,7 +34,6 @@ class exgClass {
 	 * @void
 	 */
 	function __construct ( &$params, &$row, &$id ) {
-		$html = 'tag = '.$params['TAG'].' - url = '.$params['URL'].' path ='.$params['URL'];
-		return($html);
+		$this->html = 'tag = '.$params['TAG'].' - url = '.$params['URL'].' path ='.$params['URL'];
 	}
 }

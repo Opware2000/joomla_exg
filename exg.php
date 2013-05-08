@@ -84,7 +84,7 @@ class PlgContentEXG extends JPlugin
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
 		}
-		$html .= $galerie;
+		$html .= $galerie->html;
 		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
