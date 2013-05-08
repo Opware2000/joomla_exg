@@ -122,8 +122,8 @@ class PlgContentEXG extends JPlugin
 	 }
 	 private function listePath($searchpath) {
 	 	//Import filesystem libraries. Perhaps not necessary, but does not hurt
-	 	jimport('joomla.filesystem.file');
-	 	 
+//	 	jimport('joomla.filesystem.file');
+	 	jimport('joomla.filesystem.folder');
 	 	return(JFolder::files($searchpath, '.jpg'));
 	 }
 }
