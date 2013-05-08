@@ -29,6 +29,7 @@ class PlgContentEXG extends JPlugin
 	protected $_live_site;
 	protected $_absolute_path;
 	protected $_parametres;
+	protected $_debug;
 //	protected $_html;
 	
 	function __construct(&$subject, $params) {
@@ -47,6 +48,8 @@ class PlgContentEXG extends JPlugin
 		{
 			$this->_live_site = substr($this->_live_site, 0, -1);
 		}
+		// Initialisation
+		$this->_debug = true;
 		// on récupère quelques paramètres
 		$tag = $this->params->get('exg_tag', $this->_tag_gallery);
 		//vérification que le tag est correctement formaté
@@ -84,7 +87,9 @@ class PlgContentEXG extends JPlugin
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
 		}
-		$html .= '<pre>'.print_r($galerie->debug, true).'</pre><br />';
+		if($this->_debug){
+			$html .= '<pre>'.print_r($galerie->getDebug(), true).'</pre><br />';
+		}
 		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
