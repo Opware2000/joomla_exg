@@ -26,7 +26,7 @@ defined('_JEXEC') or die('Restricted access');
  **/
 class exgClass {
 	var $html;
-	protected $_debug = array();
+	var $debug = array();
 	/**
 	 * Constructeur php5
 	 *
@@ -35,8 +35,8 @@ class exgClass {
 	 * @void
 	 */
 	function __construct ( &$params, &$row, &$id ) {
-		$this->_debug[] = 'tag = '.$params['TAG'];
-		$this->_debug[] = 'url = '.$params['URL'];
-		$this->_debug[] = 'path ='.$params['PATH'];
+		$this->debug[] = 'tag = '.$params['TAG'];
+		$this->debug[] = 'url = '.$params['URL'];
+		$this->debug[] = 'path ='.$params['PATH'];
 	}
 }
