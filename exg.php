@@ -72,7 +72,7 @@ class PlgContentEXG extends JPlugin
 		// Oui il y a bien le tag alors on continue
 		$html='';
 		// Include the plugin files
-		include_once( dirname( __FILE__ ).'/plugin_exg/class.exg.php' );
+		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
 		//On calcule le texte à remplacer.
 		unset( $galerie );
 		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
