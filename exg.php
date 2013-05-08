@@ -45,8 +45,7 @@ class PlgContentEXG extends JPlugin
 		$this->loadLanguage('plg_content_exg', JPATH_ADMINISTRATOR);
 		// on récupere le chemin absolu et l'URL du site
 		$this->_absolute_path = JPATH_SITE;
-		$this->_live_site = JURI::base();
-		$this->_live_site = $this->nettoyageChemin($this->_live_site);
+		$this->_live_site = $this->nettoyageChemin(JURI::base());
 		// Initialisation
 		$this->_debug = true;
 		// on récupère quelques paramètres
@@ -85,7 +84,7 @@ class PlgContentEXG extends JPlugin
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
-			foreach($matches[0] as $match)
+			foreach($matches as $match)
 			{
 				$html .= '<pre>'.$match.'</pre><br />';
 			}
@@ -102,7 +101,7 @@ class PlgContentEXG extends JPlugin
 		if($this->_debug){
 			$retour_html = '<pre>';
 			foreach ($this->_debugMessage as $k => $v) {
-				$retour_html .= "\[$k] => ".print_r($v,true)."\n";
+				$retour_html .= "[$k] => ".print_r($v,true)."\n";
 			}
 			$retour_html .='</pre>';
 		}
