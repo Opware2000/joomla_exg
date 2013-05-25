@@ -62,6 +62,14 @@ class PlgContentEXG extends JPlugin
 		//initialisation
 		//$this->_html = '';
 	}
+	/**
+	 * Fonction onContentPrepare qui permet de modifier l'article pour insérer la galerie à la place du tag d'appel.
+	 * @param unknown $context
+	 * @param unknown $article
+	 * @param unknown $params
+	 * @param number $limitstart
+	 * @return boolean
+	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart=0) 
 	{
 		// Ne pas utiliser ce plugin lorsque le contenu est indexé
@@ -100,7 +108,10 @@ class PlgContentEXG extends JPlugin
 		// on effectue le remplacement
 		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
 	}
-	
+	/**
+	 * Affichage du débugage
+	 * @return string
+	 */
 	private function showDebug() {
 		$retour_html='';
 		if($this->_debug){
@@ -112,7 +123,11 @@ class PlgContentEXG extends JPlugin
 		}
 		return( $retour_html);
 	 }
-	
+	/**
+	 * Enlève le dernier / s'il est présent dans le chemin donné en paramètre $chemin
+	 * @param string $chemin
+	 * @return string
+	 */
 	 private function nettoyageChemin($chemin) {
 	 	if(substr($chemin, -1) == '/')
 	 	{
@@ -120,6 +135,10 @@ class PlgContentEXG extends JPlugin
 	 	}
 	 	return($chemin);
 	 }
+	 /**
+	  * Renvoie la liste des fichiers présents dans le répertoire passé en paramètre.
+	  * @param unknown $searchpath
+	  */
 	 private function listePath($searchpath) {
 	 	//Import filesystem libraries. Perhaps not necessary, but does not hurt
 //	 	jimport('joomla.filesystem.file');
