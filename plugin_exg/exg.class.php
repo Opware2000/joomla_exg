@@ -26,7 +26,10 @@ defined('_JEXEC') or die('Restricted access');
  **/
 class exgClass {
 	public $html;
+	public $_listeFolder = array();
 	protected $_debug = array();
+	private $base_url;
+	private $base_path;
 	/**
 	 * Constructeur php5
 	 *
@@ -38,9 +41,24 @@ class exgClass {
 		$this->_debug[] = 'tag = '.$params['TAG'];
 		$this->_debug[] = 'url = '.$params['URL'];
 		$this->_debug[] = 'path ='.$params['PATH'];
+		$this->base_url = $params['URL'];
+		$this->base_path = $params['PATH'];
 	}
 	
 	function getDebug() {
 		return ( $this->_debug );
+	}
+	
+	function createUrl($galerie) {
+		$this->_debug[] = 'contenu repertoire = '.print_r($this->_listeFolder,true);
+		$html = '<ul>';
+		// il y a des fichiers
+		if($this->_listeFolder[0]<>'') {
+			foreach($this->_listeFolder as $fichier) {
+				$html .= '<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>';
+			}
+		}
+		$html .='</ul>';
+		return $html;
 	}
 }

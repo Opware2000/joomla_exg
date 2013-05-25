@@ -96,11 +96,12 @@ class PlgContentEXG extends JPlugin
 			$i=1;
 			foreach($matches[1] as $match)
 			{
-				$html .= '<pre>'.$match."\n".print_r($this->listePath( $this->_absolute_path.'/images/'.$match),true).'</pre><br />';
-				$this->_debugMessage['galeries'][$i]=$match;
+				$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
+				$html .= $galerie->createUrl($this->_pathRoot.'/'.$match);
+				$this->_debugMessage['galeries'][$i]=$match;	
 				$i++;
 			}
-			
+			$this->_debugMessage['code_html']='<pre>'.htmlentities($html).'</pre>';
 		}
 		//traitement si débug.
 		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
