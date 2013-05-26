@@ -51,14 +51,14 @@ class exgClass {
 	
 	function createUrl($galerie) {
 		$this->_debug[] = 'contenu repertoire = '.print_r($this->_listeFolder,true);
-		$html = '<ul>';
+		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
-				$html .= '<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>';
+				$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
 			}
 		}
-		$html .='</ul>';
+		$html .="</ul>\n";
 		return $html;
 	}
 }
