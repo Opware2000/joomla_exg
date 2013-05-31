@@ -55,10 +55,16 @@ class exgClass {
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
-				$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
+			//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
+				$html .= "\t".'<li>'.$this->getThumb($galerie.$fichier, 120,120).'</li>'."\n";
+				
 			}
 		}
 		$html .="</ul>\n";
 		return $html;
+	}
+	function getThumb($str_img, $int_largeur, $int_hauteur) {
+		$text = '<img src="'.$this->base_url.'/plugins/content/exg/plugin_exg/thumbs.exg.php?chemin='.urlencode($str_img).'&largeur='.$int_largeur.'&hauteur='.$int_hauteur.'" width="'.$int_largeur.'" height="'.$int_hauteur.'" alt="'.$str_img.'" />';
+		return($text);
 	}
 }
