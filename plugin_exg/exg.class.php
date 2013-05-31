@@ -30,6 +30,7 @@ class exgClass {
 	protected $_debug = array();
 	private $base_url;
 	private $base_path;
+	private $galerie;
 	/**
 	 * Constructeur php5
 	 *
@@ -54,9 +55,10 @@ class exgClass {
 		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
+			$this->galerie = $galerie;
 			foreach($this->_listeFolder as $fichier) {
 			//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
-				$html .= "\t".'<li>'.$this->getThumb($galerie.$fichier, 120,120).'</li>'."\n";
+				$html .= "\t".'<li>'.$this->getThumb($fichier, 120,120).'</li>'."\n";
 				
 			}
 		}
@@ -64,7 +66,20 @@ class exgClass {
 		return $html;
 	}
 	function getThumb($str_img, $int_largeur, $int_hauteur) {
-		$text = '<img src="'.$this->base_url.'/plugins/content/exg/plugin_exg/thumbs.exg.php?chemin='.urlencode($str_img).'&largeur='.$int_largeur.'&hauteur='.$int_hauteur.'" width="'.$int_largeur.'" height="'.$int_hauteur.'" alt="'.$str_img.'" />';
+		require_once 'ThumbLib.inc.php';
+		$options = array('resizeUp' => true, 'jpegQuality' => 80);
+		try
+		{
+			$thumb = PhpThumbFactory::create($this->base_path.'/'.$this->galerie.$str_img, $option);
+		}
+		catch (Exception $e)
+		{
+			// handle error here however you'd like
+		}
+		$thumb->adaptiveResize($int_largeur, $int_hauteur);
+		$thumb->save($this->base_path.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png', 'png');
+		
+		$text = '<img src="'.$this->base_url.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png" alt="'.$str_img.'" />';
 		return($text);
 	}
 }
