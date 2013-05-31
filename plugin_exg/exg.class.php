@@ -70,15 +70,16 @@ class exgClass {
 		$options = array('resizeUp' => true, 'jpegQuality' => 80);
 		try
 		{
-			$thumb = PhpThumbFactory::create($this->base_path.'/'.$this->galerie.$str_img, $option);
+			$thumb = PhpThumbFactory::create($this->base_path.'/'.$this->galerie.$str_img, $options);
 		}
 		catch (Exception $e)
 		{
 			// handle error here however you'd like
 		}
 		$thumb->adaptiveResize($int_largeur, $int_hauteur);
-		$thumb->save($this->base_path.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png', 'png');
-		
+		$repertoire_temporaire = $this->base_path.'/'.$this->galerie.'thumbs/';
+		if(!is_dir($repertoire_temporaire)) mkdir($repertoire_temporaire, 0775, true);
+		$thumb->save($repertoire_temporaire.md5($str_img.$int_hauteur.$int_largeur).'.png', 'png');
 		$text = '<img src="'.$this->base_url.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png" alt="'.$str_img.'" />';
 		return($text);
 	}
