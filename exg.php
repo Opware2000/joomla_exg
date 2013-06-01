@@ -96,7 +96,7 @@ class PlgContentEXG extends JPlugin
 			$i=0;
 			foreach($matches[1] as $match)
 			{
-				$galerie = new exgClass($this->_parametres);
+				$galerie = new exgClass($this->_parametres, $i);
 				$exg_repertoire = preg_replace("@{.+?}@", "", $match);
 				$regex = "@{".$this->_tag_gallery."}".$exg_repertoire."{/".$this->_tag_gallery."}@s";
 				$galerie_html ='galerie #'.$i;
@@ -109,6 +109,8 @@ class PlgContentEXG extends JPlugin
 				$article->text = preg_replace($regex, $galerie_html, $article->text);
 				$this->_debugMessage['code_html'][$i]='<b>Galerie #'.$i.'</b><pre>'.htmlentities($galerie_html).'</pre>';
 				$this->_debugMessage['retour_exgClass'][$i] = $galerie->getDebug();
+				$this->_debugMessage['css'][$i]=$galerie->genereCss();
+				$this->ajouteCss($galerie->genereCss());
 				unset( $galerie );
 			}
 		}
@@ -152,5 +154,15 @@ class PlgContentEXG extends JPlugin
 		//Importe les bibliothèques du système de fichiers. Peut-être pas nécessaire, mais ne fait pas mal
 		jimport('joomla.filesystem.folder');
 		return(JFolder::files($searchpath, '.jpg'));
+	}
+	
+	private function ajouteCss($styleCss) {
+		$doc = JFactory::getDocument();
+		$type = 'text/css';
+//		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
+//		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
+		$doc->addStyleDeclaration($styleCss, $type);
+		// Add Javascript
+//		$doc->addScriptDeclaration($javascript, $type);
 	}
 }
