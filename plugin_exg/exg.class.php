@@ -23,7 +23,7 @@
 defined('_JEXEC') or die('Restricted access');
 /**
  * class Easy eXtended Gallery : fournit une API pour Easy eXtended Gallery
- **/
+**/
 class exgClass {
 	public $html;
 	protected $_listeFolder = array();
@@ -31,6 +31,7 @@ class exgClass {
 	private $base_url;
 	private $base_path;
 	private $galerie;
+	private $base_miniatures;
 	/**
 	 * Constructeur php5
 	 *
@@ -46,7 +47,7 @@ class exgClass {
 		$this->base_url = $params['URL'];
 		$this->base_path = $params['PATH'];
 	}
-	
+
 	function getDebug() {
 		return ( $this->_debug );
 	}
@@ -60,39 +61,49 @@ class exgClass {
 		$this->base_url .= '/'.$repertoireBase.'/'.$repertoire;
 		$this->base_path .= '/'.$repertoireBase.'/'.$repertoire;
 		$this->_listeFolder = $images;
+		//on créé le répertoire qui contiendra les miniatures
+		$this->base_miniatures = $this->base_path.'/thumbs/';
+		if(!is_dir($this->base_miniatures)) mkdir($this->base_miniatures, 0775, true);
+		
 	}
 	function createUrl() {
-		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
+		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';	
 		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
-			//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
+				//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
 				$html .= "\t".'<li>'.$this->getThumb($fichier, 120,120).'</li>'."\n";
-				
+
 			}
 		}
 		$html .="</ul>\n";
 		return $html;
 	}
-	
+
 	function getThumb($str_img, $int_largeur, $int_hauteur) {
-		require_once 'ThumbLib.inc.php';
-		$options = array('resizeUp' => true, 'jpegQuality' => 80);
-	/*	try
-		{
-			$thumb = PhpThumbFactory::create($this->base_path.$str_img, $options);
+		$this->_debug['phpThumbs'] = 'miniatures trouvées';
+		$nomThumbs = $this->nomMiniature($str_img, $int_hauteur, $int_largeur).'.png';
+		if(!file_exists($this->base_miniatures.$nomThumbs)){
+			require_once 'ThumbLib.inc.php';
+			$options = array('resizeUp' => true, 'jpegQuality' => 80);
+			try
+			{
+				$thumb = PhpThumbFactory::create($this->base_path.$str_img, $options);
+				$thumb->adaptiveResize($int_largeur, $int_hauteur);
+				$thumb->save($this->base_miniatures.$nomThumbs, 'png');
+				$this->_debug['phpThumbs'] = 'miniature regénérée';
+			}
+			catch (Exception $e)
+			{
+				// handle error here however you'd like
+			}
 		}
-		catch (Exception $e)
-		{
-			// handle error here however you'd like
-		}
-		$thumb->adaptiveResize($int_largeur, $int_hauteur);
-		$repertoire_temporaire = $this->base_path.'/'.$this->galerie.'thumbs/';
-		if(!is_dir($repertoire_temporaire)) mkdir($repertoire_temporaire, 0775, true);
-		$thumb->save($repertoire_temporaire.md5($str_img.$int_hauteur.$int_largeur).'.png', 'png');
-	*/	$text = '<img src="'.$this->base_url.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png" alt="'.$str_img.'" />';
-		$text = $this->base_path.$str_img;
+		$text = '<img src="'.$this->base_url.'thumbs/'.$nomThumbs.'" alt="'.$str_img.'" />';
 		return($text);
+	}
+
+	private function nomMiniature($str_img,$int_hauteur,$int_largeur){
+		return md5($str_img.$int_hauteur.$int_largeur);
 	}
 }
