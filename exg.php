@@ -5,7 +5,7 @@
  * @author 		Nicolas Ogier {@link http://www.nicolas-ogier.fr}
  * @version 	3-1.0	2013-05-01
  * @link 		http://www.nicolas-ogier.fr/exg/
- * 
+ *
  * @license 	GNU/GPL http://www.gnu.org/copyleft/gpl.html
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@ class PlgContentEXG extends JPlugin
 	private   $_debug;
 	private	  $_debugMessage = array();
 	protected $_pathRoot='images';
-//	protected $_html;
-	
+	//	protected $_html;
+
 	function __construct(&$subject, $params) {
 		$app = JFactory::getApplication();
 		if($app->isAdmin())
@@ -52,13 +52,15 @@ class PlgContentEXG extends JPlugin
 		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);
 		$root = $this->params->get('path_root', $this->_pathRoot);
 		$root = $this->nettoyageChemin($root);
+		$miniatureHauteur = $this->params->get('min_height',100);
+		$miniatureLargeur = $this->params->get('min_width',100);
 		//vérification que le tag est correctement formaté
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
-		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path);
+		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path,'THUMB_WIDTH'=>$miniatureLargeur, 'THUMB_HEIGHT'=>$miniatureHauteur);
 		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
-		$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
+//		$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
 		//initialisation
 		//$this->_html = '';
 	}
@@ -70,7 +72,7 @@ class PlgContentEXG extends JPlugin
 	 * @param number $limitstart
 	 * @return boolean
 	 */
-	public function onContentPrepare($context, &$article, &$params, $limitstart=0) 
+	public function onContentPrepare($context, &$article, &$params, $limitstart=0)
 	{
 		// Ne pas utiliser ce plugin lorsque le contenu est indexé
 		if ($context === 'com_finder.indexer')
@@ -101,7 +103,7 @@ class PlgContentEXG extends JPlugin
 				$galerie->cheminsImages($this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match),$this->_pathRoot,$match);
 				//$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
 				$galerie_html .= $galerie->createUrl();
-				$this->_debugMessage['galeries'][$i]=$match;	
+				$this->_debugMessage['galeries'][$i]=$match;
 				$i++;
 				//remplacement du texte d'appel par la galerie
 				$article->text = preg_replace($regex, $galerie_html, $article->text);
@@ -110,12 +112,10 @@ class PlgContentEXG extends JPlugin
 				unset( $galerie );
 			}
 		}
-
 		//traitement si débug.
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
-	$article->text .=$html_debug;
-
+		$article->text .=$html_debug;
 	}
 	/**
 	 * Affichage du débugage
@@ -131,26 +131,26 @@ class PlgContentEXG extends JPlugin
 			$retour_html .='</pre>';
 		}
 		return( $retour_html);
-	 }
+	}
 	/**
 	 * Enlève le dernier / s'il est présent dans le chemin donné en paramètre $chemin
 	 * @param string $chemin
 	 * @return string
 	 */
-	 private function nettoyageChemin($chemin) {
-	 	if(substr($chemin, -1) == '/')
-	 	{
-	 		$chemin = substr($chemin, 0, -1);
-	 	}
-	 	return($chemin);
-	 }
-	 /**
-	  * Renvoie la liste des fichiers présents dans le répertoire passé en paramètre.
-	  * @param unknown $searchpath
-	  */
-	 private function listePath($searchpath) {
-	 	//Importe les bibliothèques du système de fichiers. Peut-être pas nécessaire, mais ne fait pas mal
-	 	jimport('joomla.filesystem.folder');
-	 	return(JFolder::files($searchpath, '.jpg'));
-	 }
+	private function nettoyageChemin($chemin) {
+		if(substr($chemin, -1) == '/')
+		{
+			$chemin = substr($chemin, 0, -1);
+		}
+		return($chemin);
+	}
+	/**
+	 * Renvoie la liste des fichiers présents dans le répertoire passé en paramètre.
+	 * @param unknown $searchpath
+	 */
+	private function listePath($searchpath) {
+		//Importe les bibliothèques du système de fichiers. Peut-être pas nécessaire, mais ne fait pas mal
+		jimport('joomla.filesystem.folder');
+		return(JFolder::files($searchpath, '.jpg'));
+	}
 }

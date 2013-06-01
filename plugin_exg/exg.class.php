@@ -28,10 +28,13 @@ class exgClass {
 	public $html;
 	protected $_listeFolder = array();
 	protected $_debug = array();
-	private $base_url;
-	private $base_path;
-	private $galerie;
-	private $base_miniatures;
+	private $_base_url;
+	private $_base_path;
+	private $_base_miniatures;
+	private $_thumbHeight;
+	private $_thumbWidth;
+	private $_repminiatures;
+	private $_adaptative = false;
 	/**
 	 * Constructeur php5
 	 *
@@ -44,36 +47,43 @@ class exgClass {
 		$this->_debug[] = 'url = '.$params['URL'];
 		$this->_debug[] = 'path = '.$params['PATH'];
 		$this->_debug[] = 'articleId = '.$params['ARTICLE_ID'];
-		$this->base_url = $params['URL'];
-		$this->base_path = $params['PATH'];
+		$this->_base_url = $params['URL'];
+		$this->_base_path = $params['PATH'];
+		$this->_thumbHeight = $params['THUMB_HEIGHT'];
+		$this->_thumbWidth = $params['THUMB_WIDTH'];
+		$this->_debug[] = 'thumbnail height = '.$this->_thumbHeight;
+		$this->_debug[] = 'thumbnail width  = '.$this->_thumbWidth;
+		$this->_repminiatures = 'thumbs/'.$this->_thumbWidth.'x'.$this->_thumbHeight.'/';
 	}
 
 	function getDebug() {
 		return ( $this->_debug );
 	}
 	/**
-	 * Remplis les bases_path et base_url avec le répertoire de la galerie
+	 * Remplis les bases_path et _base_url avec le répertoire de la galerie
 	 * Remplis _listeFolder avec les noms des images du répertoire de la galerie
 	 * @param unknown $images
 	 * @param unknown $repertoireBase
 	 */
 	function cheminsImages($images, $repertoireBase,$repertoire){
-		$this->base_url .= '/'.$repertoireBase.'/'.$repertoire;
-		$this->base_path .= '/'.$repertoireBase.'/'.$repertoire;
+		$this->_base_url .= '/'.$repertoireBase.'/'.$repertoire;
+		$this->_base_path .= '/'.$repertoireBase.'/'.$repertoire;
 		$this->_listeFolder = $images;
 		//on créé le répertoire qui contiendra les miniatures
-		$this->base_miniatures = $this->base_path.'/thumbs/';
-		if(!is_dir($this->base_miniatures)) mkdir($this->base_miniatures, 0775, true);
-		
+
+		$this->_base_miniatures = $this->_base_path.$this->_repminiatures;
+		if(!is_dir($this->_base_miniatures)) mkdir($this->_base_miniatures, 0775, true);
+		$this->_debug[] = 'chemin des miniatures : '.$this->_base_miniatures;
+
 	}
 	function createUrl() {
-		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';	
+		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
 		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
-				//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
-				$html .= "\t".'<li>'.$this->getThumb($fichier, 120,120).'</li>'."\n";
+				//	$html .= "\t".'<li><a href="'.$this->_base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
+				$html .= "\t".'<li>'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'</li>'."\n";
 
 			}
 		}
@@ -84,14 +94,18 @@ class exgClass {
 	function getThumb($str_img, $int_largeur, $int_hauteur) {
 		$this->_debug['phpThumbs'] = 'miniatures trouvées';
 		$nomThumbs = $this->nomMiniature($str_img, $int_hauteur, $int_largeur).'.png';
-		if(!file_exists($this->base_miniatures.$nomThumbs)){
+		if(!file_exists($this->_base_miniatures.$nomThumbs)){
 			require_once 'ThumbLib.inc.php';
 			$options = array('resizeUp' => true, 'jpegQuality' => 80);
 			try
 			{
-				$thumb = PhpThumbFactory::create($this->base_path.$str_img, $options);
-				$thumb->adaptiveResize($int_largeur, $int_hauteur);
-				$thumb->save($this->base_miniatures.$nomThumbs, 'png');
+				$thumb = PhpThumbFactory::create($this->_base_path.$str_img, $options);
+				if(!$this->_adaptative){
+					$thumb->adaptiveResize($int_largeur, $int_hauteur);
+				}else{
+					$thumb->resize($int_largeur, $int_hauteur);
+				}
+				$thumb->save($this->_base_miniatures.$nomThumbs, 'png');
 				$this->_debug['phpThumbs'] = 'miniature regénérée';
 			}
 			catch (Exception $e)
@@ -99,7 +113,8 @@ class exgClass {
 				// handle error here however you'd like
 			}
 		}
-		$text = '<img src="'.$this->base_url.'thumbs/'.$nomThumbs.'" alt="'.$str_img.'" />';
+		$text = '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" />';
+		$this->_debug['repminiatures']=$this->_repminiatures;
 		return($text);
 	}
 

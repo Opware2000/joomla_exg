@@ -22,6 +22,9 @@
   			 <fieldset name="EXG_GALLERY_PARAMETERS">
   			 	<field name="path_root" type="text" default="images" description="PLG_CONTENT_EXG_PATH_DESCRIPTION" label="PLG_CONTENT_EXG_PATH_LABEL" />
   				<field name="exg_tag" type="text" default="gallery" description="PLG_CONTENT_EXG_TAG_DESCRIPTION" label="PLG_CONTENT_EXG_TAG_LABEL" />
+  			 	<field name="min_width" type="text" default="120" description="PLG_CONTENT_EXG_MINWIDTH_DESCRIPTION" label="PLG_CONTENT_EXG_MINWIDTH_LABEL" />
+  			 	<field name="min_height" type="text" default="100" description="PLG_CONTENT_EXG_MINHEIGHT_DESCRIPTION" label="PLG_CONTENT_EXG_MINHEIGHT_LABEL" />
+  			 	
   			 </fieldset>
   		</fields>
   	</config>	  
