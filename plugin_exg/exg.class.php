@@ -26,7 +26,7 @@ defined('_JEXEC') or die('Restricted access');
  **/
 class exgClass {
 	public $html;
-	public $_listeFolder = array();
+	protected $_listeFolder = array();
 	protected $_debug = array();
 	private $base_url;
 	private $base_path;
@@ -50,13 +50,25 @@ class exgClass {
 	function getDebug() {
 		return ( $this->_debug );
 	}
+	/**
+	 * Remplis les bases_path et base_url avec le répertoire de la galerie
+	 * Remplis _listeFolder avec les noms des images du répertoire de la galerie
+	 * @param unknown $images
+	 * @param unknown $repertoireBase
+	 */
+	function cheminsImages($images, $repertoireBase){
+		$this->base_url .= '/'.$repertoireBase.'/';
+		$this->base_path .= '/'.$repertoireBase.'/';
+		$this->_listeFolder = $images;
+	}
 	
-	function createUrl($galerie) {
+	
+	
+	function createUrl() {
 		$this->_debug[] = 'contenu repertoire = '.print_r($this->_listeFolder,true);
 		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
-			$this->galerie = $galerie;
 			foreach($this->_listeFolder as $fichier) {
 			//	$html .= "\t".'<li><a href="'.$this->base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
 				$html .= "\t".'<li>'.$this->getThumb($fichier, 120,120).'</li>'."\n";
@@ -66,12 +78,13 @@ class exgClass {
 		$html .="</ul>\n";
 		return $html;
 	}
+	
 	function getThumb($str_img, $int_largeur, $int_hauteur) {
 		require_once 'ThumbLib.inc.php';
 		$options = array('resizeUp' => true, 'jpegQuality' => 80);
 		try
 		{
-			$thumb = PhpThumbFactory::create($this->base_path.'/'.$this->galerie.$str_img, $options);
+			$thumb = PhpThumbFactory::create($this->base_path.$str_img, $options);
 		}
 		catch (Exception $e)
 		{
