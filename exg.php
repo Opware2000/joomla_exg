@@ -89,7 +89,9 @@ class PlgContentEXG extends JPlugin
 		//On calcule le texte à remplacer.
 		unset( $galerie );
 		$this->_debugMessage['galeries']=array();
-		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
+		$this->_parametres['ARTICLE_ID']=$article->id;
+		
+		$galerie = new exgClass($this->_parametres);
 //		$article->text = $galerie->DisplayGallery($article->text);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
@@ -98,20 +100,20 @@ class PlgContentEXG extends JPlugin
 			foreach($matches[1] as $match)
 			{
 				$exg_repertoire = preg_replace("@{.+?}@", "", $match);
-				$regex = "@{gallery}".$exg_repertoire."{/gallery}@s";
+				$regex = "@{".$this->_tag_gallery."}".$exg_repertoire."{/".$this->_tag_gallery."}@s";
 				$galerie_html ='galerie #'.$i;
 				$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
 				//$galerie_html= $galerie->createUrl($this->_pathRoot.'/'.$match);
 				$this->_debugMessage['galeries'][$i]=$match;	
 				$i++;
-	//			$article->text = preg_replace("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $galerie_html, $article->text);
+				//remplacement du texte d'appel par la galerie
 				$article->text = preg_replace($regex, $galerie_html, $article->text);
+				$this->_debugMessage['code_html'][$i]='<b>Galerie #'.$i.'</b><pre>'.htmlentities($galerie_html).'</pre>';
 			}
-			$this->_debugMessage['code_html']='<pre>'.htmlentities($galerie_html).'</pre>';
 		}
 
 		//traitement si débug.
-//		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
+	$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 	$article->text .=$html_debug;
@@ -149,7 +151,7 @@ class PlgContentEXG extends JPlugin
 	  * @param unknown $searchpath
 	  */
 	 private function listePath($searchpath) {
-	 	//Import filesystem libraries. Perhaps not necessary, but does not hurt
+	 	//Importe les bibliothèques du système de fichiers. Peut-être pas nécessaire, mais ne fait pas mal
 	 	jimport('joomla.filesystem.folder');
 	 	return(JFolder::files($searchpath, '.jpg'));
 	 }

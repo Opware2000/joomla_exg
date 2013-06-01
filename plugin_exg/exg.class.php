@@ -38,10 +38,11 @@ class exgClass {
 	 * @param array $row article qui appele le plugin
 	 * @void
 	 */
-	function __construct ( &$params, &$row, &$id ) {
+	function __construct ( &$params) {
 		$this->_debug[] = 'tag = '.$params['TAG'];
 		$this->_debug[] = 'url = '.$params['URL'];
-		$this->_debug[] = 'path ='.$params['PATH'];
+		$this->_debug[] = 'path = '.$params['PATH'];
+		$this->_debug[] = 'articleId = '.$params['ARTICLE_ID'];
 		$this->base_url = $params['URL'];
 		$this->base_path = $params['PATH'];
 	}
