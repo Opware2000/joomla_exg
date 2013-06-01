@@ -83,31 +83,39 @@ class PlgContentEXG extends JPlugin
 			return true;
 		}
 		// Oui il y a bien le tag alors on continue
-		$html='';
+		$galerie_html='';
 		// Include the plugin files
 		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
 		//On calcule le texte à remplacer.
 		unset( $galerie );
 		$this->_debugMessage['galeries']=array();
 		$galerie = new exgClass($this->_parametres, $article->text , $article->id);
+//		$article->text = $galerie->DisplayGallery($article->text);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
-			$i=1;
+			$i=0;
 			foreach($matches[1] as $match)
 			{
+				$exg_repertoire = preg_replace("@{.+?}@", "", $match);
+				$regex = "@{gallery}".$exg_repertoire."{/gallery}@s";
+				$galerie_html ='galerie #'.$i;
 				$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
-				$html .= $galerie->createUrl($this->_pathRoot.'/'.$match);
+				//$galerie_html= $galerie->createUrl($this->_pathRoot.'/'.$match);
 				$this->_debugMessage['galeries'][$i]=$match;	
 				$i++;
+	//			$article->text = preg_replace("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $galerie_html, $article->text);
+				$article->text = preg_replace($regex, $galerie_html, $article->text);
 			}
-			$this->_debugMessage['code_html']='<pre>'.htmlentities($html).'</pre>';
+			$this->_debugMessage['code_html']='<pre>'.htmlentities($galerie_html).'</pre>';
 		}
+
 		//traitement si débug.
-		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
-		$html .= $this->showDebug();
+//		$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
+		$html_debug = $this->showDebug();
 		// on effectue le remplacement
-		$article->text = preg_replace("@(<p>)?{".$this->_tag_gallery."}"."(.*)"."{/".$this->_tag_gallery."}(</p>)?@s", $html, $article->text);
+	$article->text .=$html_debug;
+		
 	}
 	/**
 	 * Affichage du débugage
@@ -142,7 +150,6 @@ class PlgContentEXG extends JPlugin
 	  */
 	 private function listePath($searchpath) {
 	 	//Import filesystem libraries. Perhaps not necessary, but does not hurt
-//	 	jimport('joomla.filesystem.file');
 	 	jimport('joomla.filesystem.folder');
 	 	return(JFolder::files($searchpath, '.jpg'));
 	 }
