@@ -34,7 +34,7 @@ class exgClass {
 	private $_thumbHeight;
 	private $_thumbWidth;
 	private $_repminiatures;
-	private $_adaptative = false;
+	private $_adaptative = true;
 	/**
 	 * Constructeur php5
 	 *
@@ -100,7 +100,7 @@ class exgClass {
 			try
 			{
 				$thumb = PhpThumbFactory::create($this->_base_path.$str_img, $options);
-				if(!$this->_adaptative){
+				if($this->_adaptative){
 					$thumb->adaptiveResize($int_largeur, $int_hauteur);
 				}else{
 					$thumb->resize($int_largeur, $int_hauteur);
