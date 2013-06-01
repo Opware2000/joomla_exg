@@ -86,23 +86,19 @@ class PlgContentEXG extends JPlugin
 		$galerie_html='';
 		// Include the plugin files
 		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
-		//On calcule le texte à remplacer.
-		
 		$this->_debugMessage['galeries']=array();
 		$this->_parametres['ARTICLE_ID']=$article->id;
-		
-		$galerie = new exgClass($this->_parametres);
-//		$article->text = $galerie->DisplayGallery($article->text);
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
 		{
 			$langue = JFactory::getLanguage()->getTag();
 			$i=0;
 			foreach($matches[1] as $match)
 			{
+				$galerie = new exgClass($this->_parametres);
 				$exg_repertoire = preg_replace("@{.+?}@", "", $match);
 				$regex = "@{".$this->_tag_gallery."}".$exg_repertoire."{/".$this->_tag_gallery."}@s";
 				$galerie_html ='galerie #'.$i;
-				$galerie->cheminsImages($this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match),$this->_pathRoot);
+				$galerie->cheminsImages($this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match),$this->_pathRoot,$match);
 				//$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
 				$galerie_html .= $galerie->createUrl();
 				$this->_debugMessage['galeries'][$i]=$match;	
@@ -110,15 +106,16 @@ class PlgContentEXG extends JPlugin
 				//remplacement du texte d'appel par la galerie
 				$article->text = preg_replace($regex, $galerie_html, $article->text);
 				$this->_debugMessage['code_html'][$i]='<b>Galerie #'.$i.'</b><pre>'.htmlentities($galerie_html).'</pre>';
+				$this->_debugMessage['retour_exgClass'][$i] = $galerie->getDebug();
+				unset( $galerie );
 			}
 		}
 
 		//traitement si débug.
-	$this->_debugMessage['retour_exgClass'] = $galerie->getDebug();
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 	$article->text .=$html_debug;
-	unset( $galerie );
+
 	}
 	/**
 	 * Affichage du débugage

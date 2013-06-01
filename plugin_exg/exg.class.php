@@ -56,16 +56,13 @@ class exgClass {
 	 * @param unknown $images
 	 * @param unknown $repertoireBase
 	 */
-	function cheminsImages($images, $repertoireBase){
-		$this->base_url .= '/'.$repertoireBase.'/';
-		$this->base_path .= '/'.$repertoireBase.'/';
+	function cheminsImages($images, $repertoireBase,$repertoire){
+		$this->base_url .= '/'.$repertoireBase.'/'.$repertoire;
+		$this->base_path .= '/'.$repertoireBase.'/'.$repertoire;
 		$this->_listeFolder = $images;
 	}
-	
-	
-	
 	function createUrl() {
-		$this->_debug[] = 'contenu repertoire = '.print_r($this->_listeFolder,true);
+		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
 		$html = "<ul>\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
@@ -82,7 +79,7 @@ class exgClass {
 	function getThumb($str_img, $int_largeur, $int_hauteur) {
 		require_once 'ThumbLib.inc.php';
 		$options = array('resizeUp' => true, 'jpegQuality' => 80);
-		try
+	/*	try
 		{
 			$thumb = PhpThumbFactory::create($this->base_path.$str_img, $options);
 		}
@@ -94,7 +91,8 @@ class exgClass {
 		$repertoire_temporaire = $this->base_path.'/'.$this->galerie.'thumbs/';
 		if(!is_dir($repertoire_temporaire)) mkdir($repertoire_temporaire, 0775, true);
 		$thumb->save($repertoire_temporaire.md5($str_img.$int_hauteur.$int_largeur).'.png', 'png');
-		$text = '<img src="'.$this->base_url.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png" alt="'.$str_img.'" />';
+	*/	$text = '<img src="'.$this->base_url.'/'.$this->galerie.'thumbs/'.md5($str_img.$int_hauteur.$int_largeur).'.png" alt="'.$str_img.'" />';
+		$text = $this->base_path.$str_img;
 		return($text);
 	}
 }
