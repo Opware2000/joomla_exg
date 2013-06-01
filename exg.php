@@ -103,7 +103,7 @@ class PlgContentEXG extends JPlugin
 				$regex = "@{".$this->_tag_gallery."}".$exg_repertoire."{/".$this->_tag_gallery."}@s";
 				$galerie_html ='galerie #'.$i;
 				$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
-				//$galerie_html= $galerie->createUrl($this->_pathRoot.'/'.$match);
+				$galerie_html .= $galerie->createUrl($this->_pathRoot.'/'.$match);
 				$this->_debugMessage['galeries'][$i]=$match;	
 				$i++;
 				//remplacement du texte d'appel par la galerie
