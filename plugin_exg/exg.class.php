@@ -81,21 +81,23 @@ class exgClass {
 	}
 	function createUrl() {
 		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
-		$html = '<div  id="gallery_'.$this->_gallerieNombre.'">'."\n";
+		$html = '<div  id="gallery_'.$this->_gallerieNombre.'" class="popup-gallery'.$this->_gallerieNombre.'">'."\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
 				//	$html .= "\t".'<li><a href="'.$this->_base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
 				//$html .= "\t".'<li class="images">'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'</li>'."\n";
-				$html .='<div class="box">
-				<div class="boxInner">
-				'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'
-				<div class="titleBox">'.$fichier.'</div>
-				</div>
-				</div>';
+			//	$html .='<div class="box">
+			//	<div class="boxInner">
+			//	'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'
+			//	<div class="titleBox">'.$fichier.'</div>
+			//	</div>
+			//	</div>'."\n";
+			$html .=$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight);
 			}
 		}
 		$html .="</div>\n";
+		$html .=$this->genereJS();
 //		$html .='<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script><script type="text/javascript">'."$(function(){ if ('ontouchstart' in window){ $('body').removeClass('no-touch').addClass('touch'); $('div.boxInner img').click(function(){$(this).closest('.boxInner').toggleClass('touchFocus');});}});</script>";
 		return $html;
 	}
@@ -122,7 +124,9 @@ class exgClass {
 				// handle error here however you'd like
 			}
 		}
-		$text = '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" />';
+		$text = '<a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'">';
+		$text .= '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" height="'.$int_hauteur.'" width="'.$int_largeur.'" />';
+		$text .='</a>';
 		$this->_debug['repminiatures']=$this->_repminiatures;
 		return($text);
 	}
@@ -146,5 +150,12 @@ class exgClass {
 		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%; padding-bottom: 33.3%; }}';
 		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  padding-bottom: 25%;}}';
 		return $css ;
+	}
+	
+	function genereJS() {
+	$html='<script type="text/javascript">'."	(document).ready(function() {
+		$('.popup-gallery".$this->_gallerieNombre."').magnificPopup({delegate: 'a',type: 'image',tLoading: 'Loading image #%curr%...',}	}
+				mainClass: 'mfp-img-mobile',gallery: {enabled: true,navigateByImgClick: true,preload: [0,1] },image: {tError: '<a href=".'"%url%"'.">The image #%curr%</a> could not be loaded.',titleSrc: function(item) {return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';}}});});</script>";
+	return $html;	
 	}
 }

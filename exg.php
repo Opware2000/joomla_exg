@@ -110,6 +110,7 @@ class PlgContentEXG extends JPlugin
 				$this->_debugMessage['code_html'][$i]='<b>Galerie #'.$i.'</b><pre>'.htmlentities($galerie_html).'</pre>';
 				$this->_debugMessage['retour_exgClass'][$i] = $galerie->getDebug();
 				$this->_debugMessage['css'][$i]=$galerie->genereCss();
+				//$galerie->genereJS();
 				$this->ajouteCss($galerie->genereCss());
 				unset( $galerie );
 			}
@@ -161,8 +162,12 @@ class PlgContentEXG extends JPlugin
 		$type = 'text/css';
 //		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
 //		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
+		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+		$doc->addScript($this->_live_site.'/plugins/content/exg/plugin_exg/magnificpopup/jquery.magnific-popup.min.js');
+		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/magnificpopup/magnific-popup.css");
 		$doc->addStyleDeclaration($styleCss, $type);
 		// Add Javascript
 //		$doc->addScriptDeclaration($javascript, $type);
+
 	}
 }
