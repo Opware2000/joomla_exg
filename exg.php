@@ -60,7 +60,7 @@ class PlgContentEXG extends JPlugin
 		}
 		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path,'THUMB_WIDTH'=>$miniatureLargeur, 'THUMB_HEIGHT'=>$miniatureHauteur);
 		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
-//		$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
+		//$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
 		//initialisation
 		//$this->_html = '';
 	}
