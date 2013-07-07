@@ -34,7 +34,9 @@ class exgClass {
 	private $_thumbHeight;
 	private $_thumbWidth;
 	private $_repminiatures;
-	private $_adaptative = false;
+	private $_adaptative = true;
+	private $_gallerieNombre;
+	private $_nombreImage=array(4,4,3,2,1);
 	/**
 	 * Constructeur php5
 	 *
@@ -42,7 +44,7 @@ class exgClass {
 	 * @param array $row article qui appele le plugin
 	 * @void
 	 */
-	function __construct ( &$params) {
+	function __construct ( &$params, $i) {
 		$this->_debug[] = 'tag = '.$params['TAG'];
 		$this->_debug[] = 'url = '.$params['URL'];
 		$this->_debug[] = 'path = '.$params['PATH'];
@@ -54,6 +56,7 @@ class exgClass {
 		$this->_debug[] = 'thumbnail height = '.$this->_thumbHeight;
 		$this->_debug[] = 'thumbnail width  = '.$this->_thumbWidth;
 		$this->_repminiatures = 'thumbs/'.$this->_thumbWidth.'x'.$this->_thumbHeight.'/';
+		$this->_gallerieNombre = $i;
 	}
 
 	function getDebug() {
@@ -78,16 +81,24 @@ class exgClass {
 	}
 	function createUrl() {
 		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
-		$html = "<ul>\n";
+		$html = '<div  id="gallery_'.$this->_gallerieNombre.'" class="popup-gallery'.$this->_gallerieNombre.'">'."\n";
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
 			foreach($this->_listeFolder as $fichier) {
 				//	$html .= "\t".'<li><a href="'.$this->_base_url.'/'.$galerie.$fichier.'" target="_blank">'.$fichier.'</a></li>'."\n";
-				$html .= "\t".'<li>'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'</li>'."\n";
-
+				//$html .= "\t".'<li class="images">'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'</li>'."\n";
+			//	$html .='<div class="box">
+			//	<div class="boxInner">
+			//	'.$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight).'
+			//	<div class="titleBox">'.$fichier.'</div>
+			//	</div>
+			//	</div>'."\n";
+			$html .=$this->getThumb($fichier, $this->_thumbWidth,$this->_thumbHeight);
 			}
 		}
-		$html .="</ul>\n";
+		$html .="</div>\n";
+		$html .=$this->genereJS();
+//		$html .='<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script><script type="text/javascript">'."$(function(){ if ('ontouchstart' in window){ $('body').removeClass('no-touch').addClass('touch'); $('div.boxInner img').click(function(){$(this).closest('.boxInner').toggleClass('touchFocus');});}});</script>";
 		return $html;
 	}
 
@@ -100,7 +111,7 @@ class exgClass {
 			try
 			{
 				$thumb = PhpThumbFactory::create($this->_base_path.$str_img, $options);
-				if(!$this->_adaptative){
+				if($this->_adaptative){
 					$thumb->adaptiveResize($int_largeur, $int_hauteur);
 				}else{
 					$thumb->resize($int_largeur, $int_hauteur);
@@ -113,12 +124,38 @@ class exgClass {
 				// handle error here however you'd like
 			}
 		}
-		$text = '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" />';
+		$text = '<a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'">';
+		$text .= '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" height="'.$int_hauteur.'" width="'.$int_largeur.'" />';
+		$text .='</a>';
 		$this->_debug['repminiatures']=$this->_repminiatures;
 		return($text);
 	}
 
 	private function nomMiniature($str_img,$int_hauteur,$int_largeur){
 		return md5($str_img.$int_hauteur.$int_largeur);
+	}
+	
+	function genereCss() {
+		$css  ='#gallery'.$this->_gallerieNombre." {width:100%; clear:both;font: 10px/13px 'Lucida Sans',sans-serif;}";
+		$css .='#gallery_'.$this->_gallerieNombre.' li.images {float:left; margin-left:5px; margin-right:5px; display:block;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' ul.exg { display:block;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' {overflow: hidden; margin: 10px;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImage[0]).'%; padding-bottom: 20%;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner {	position: absolute;	left: 10px;right: 10px;top: 10px;bottom: 10px;overflow: hidden;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner img {width: 100%;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner .titleBox {position: absolute;	bottom: 0;left: 0;right: 0;margin-bottom: -50px;background: #000;background: rgba(0, 0, 0, 0.5);color: #FFF;	padding: 10px;text-align: center;	-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;	-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;}';
+		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner:hover .titleBox { margin-bottom: 0;}';
+		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;padding-bottom: 100%;}}';
+		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; padding-bottom: 50%;}}';
+		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%; padding-bottom: 33.3%; }}';
+		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  padding-bottom: 25%;}}';
+		return $css ;
+	}
+	
+	function genereJS() {
+	$html='<script type="text/javascript">'."	(document).ready(function() {
+		$('.popup-gallery".$this->_gallerieNombre."').magnificPopup({delegate: 'a',type: 'image',tLoading: 'Loading image #%curr%...',}	}
+				mainClass: 'mfp-img-mobile',gallery: {enabled: true,navigateByImgClick: true,preload: [0,1] },image: {tError: '<a href=".'"%url%"'.">The image #%curr%</a> could not be loaded.',titleSrc: function(item) {return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';}}});});</script>";
+	return $html;	
 	}
 }
