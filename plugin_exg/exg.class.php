@@ -138,7 +138,7 @@ class exgClass {
 		$css .='#gallery_'.$this->_gallerieNombre.' {overflow: hidden; margin: 10px;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImage[0]).'%; padding-bottom: 20%;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner {	position: absolute;	left: 10px;right: 10px;top: 10px;bottom: 10px;overflow: hidden;}'."\n";
-		if($this->_adaptive == true){
+		if($this->_adaptative == true){
 			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner img {width: 100%;}'."\n";
 		} else {
 			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner a {text-align:center; margin-left:auto; margin-right:auto; display:block;}'."\n";
