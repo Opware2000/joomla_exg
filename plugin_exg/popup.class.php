@@ -22,7 +22,7 @@
  */
 defined('_JEXEC') or die('Restricted access');
 /**
- * class MagnificPopup : fournit une class pour l'utilisation de MagnificPopup dans EXG
+ * class Popup : fournit une class pour l'utilisation de MagnificPopup dans EXG
  **/
 class magnificClass {
 	protected $_gallerieNombre;
@@ -34,25 +34,11 @@ class magnificClass {
 		$this->_nombreImage = $nombreImage;
 	}
 	function css(){
+		$css ='';
 		return $css ;
 	}
 	function javascript(){
-//	$html="	(document).ready(function() { $('.popup-gallery".$this->_gallerieNombre."').magnificPopup({delegate: 'a',type: 'image',tLoading: '".'Loading image'." #%curr%...',}	}mainClass: 'mfp-img-mobile',gallery: {enabled: true,navigateByImgClick: true,preload: [0,1] },image: {tError: '<a href=".'"%url%"'.">The image #%curr%</a> could not be loaded.',titleSrc: function(item) {return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';}}});})";;;		
-/*	$texte = '<script type="text/javascript">'."$(document).ready(function() {
-		$('.popup-gallery".$this->_gallerieNombre."').magnificPopup({
-  		  type: 'image',
-    		closeOnContentClick: true,
-    		image: {
-     		   verticalFit: false
-   				 }
-			});
-		});</script>";
-	*/
-		$texte = '<script type="text/javascript">'."$('.parent-container".$this->_gallerieNombre."').magnificPopup({
-			delegate: 'a', // child items selector, by clicking on it popup will open
-			type: 'image'
-					// other options
-		});</script>";
+	$texte ='';
 		return $texte;
 	}
 }
