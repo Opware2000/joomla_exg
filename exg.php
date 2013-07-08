@@ -119,7 +119,7 @@ class PlgContentEXG extends JPlugin
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 		$article->text .=$html_debug;
-	
+
 	}
 	/**
 	 * Affichage du débugage
@@ -157,12 +157,13 @@ class PlgContentEXG extends JPlugin
 		jimport('joomla.filesystem.folder');
 		return(JFolder::files($searchpath, '.jpg'));
 	}
-	
+
 	private function ajouteCss($styleCss,$javascript) {
 		$doc = JFactory::getDocument();
-//		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
-//		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
-//		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+		//		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
+		//		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
+		//		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
 		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/magnificpopup/magnific-popup.css");
 		$doc->addStyleDeclaration($styleCss, 'text/css');
 	}
+}
