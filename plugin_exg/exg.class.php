@@ -84,9 +84,9 @@ class exgClass {
 		$this->_debug[] = 'chemin des miniatures : '.$this->_base_miniatures;
 
 	}
-	function createUrl() {
+	function insertGallerie() {
 		$this->_debug[] = 'contenu repertoire = '."<pre>".print_r($this->_listeFolder,true).'</pre>';
-		$html = '<div  id="gallery_'.$this->_gallerieNombre.'" class="popup-gallery'.$this->_gallerieNombre.'">'."\n";
+		$html = '<div  id="gallery_'.$this->_gallerieNombre.'" class="parent-container'.$this->_gallerieNombre.'" >'."\n";
 		$html .='<!-- '.$this->_script->_scriptNom.' -->';
 		// il y a des fichiers
 		if($this->_listeFolder[0]<>'') {
@@ -95,7 +95,6 @@ class exgClass {
 			}
 		}
 		$html .="</div>\n";
-		$html .=$this->genereJS();
 		return $html;
 	}
 
@@ -129,36 +128,53 @@ class exgClass {
 	private function nomMiniature($str_img,$int_hauteur,$int_largeur){
 		return md5($str_img.$int_hauteur.$int_largeur);
 	}
-	
+	/**
+	 * Créer le CSS d'affichage des miniatures ainsi que le CSS généré par la class de popup sélectionnée
+	 * @return string
+	 */
 	function genereCss() {
 		// CSS de l'affichage des miniatures
-		$css  ='#gallery_'.$this->_gallerieNombre." {width:100%; clear:both;font: 10px/13px 'Lucida Sans',sans-serif;}"."\n";
-	//	$css .='#gallery_'.$this->_gallerieNombre.' li.images {float:left; margin-left:5px; margin-right:5px; display:block;}'."\n";
-	//	$css .='#gallery_'.$this->_gallerieNombre.' ul.exg { display:block; margin-left:auto; margin-right:auto;}'."\n";
+		$css  ='#gallery_'.$this->_gallerieNombre." {width:100%; clear:both;font: 10px/13px 'Lucida Sans',sans-serif;   overflow: hidden;}"."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' {overflow: hidden; margin: 10px;}'."\n";
-		$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImage[0]).'%; padding-bottom: 1%;}'."\n";
-		$css .='#gallery_'.$this->_gallerieNombre.' .box a {text-align:center; margin-left:auto; margin-right:auto; display:block;}'; 
+		$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImage[0]).'%; padding-bottom: 20%;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner {	position: absolute;	left: 10px;right: 10px;top: 10px;bottom: 10px;overflow: hidden;}'."\n";
-		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner img {width: 100%;}'."\n";
+		if($this->_adaptive == true){
+			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner img {width: 100%;}'."\n";
+		} else {
+			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner a {text-align:center; margin-left:auto; margin-right:auto; display:block;}'."\n";
+		}
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner .titleBox {position: absolute;	bottom: 0;left: 0;right: 0;margin-bottom: -50px;background: #000;background: rgba(0, 0, 0, 0.5);color: #FFF;	padding: 10px;text-align: center;	-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;	-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner:hover .titleBox { margin-bottom: 0;}'."\n";
-		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;padding-bottom: 100%;}}'."\n";
-		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; padding-bottom: 50%;}}'."\n";
-		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%; padding-bottom: 33.3%; }}'."\n";
-		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  padding-bottom: 25%;}}'."\n";
+		$css .='#gallery_'.$this->_gallerieNombre.' body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {margin-bottom: 0;}'."\n";
+		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;padding-bottom: 20%;}}'."\n";
+		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; padding-bottom: 20%;}}'."\n";
+		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%; padding-bottom:20%; }}'."\n";
+		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  padding-bottom: 30%;}}'."\n";
 		// CSS du script
-		$css .= $this->_script->css(); 
+		$css .= $this->_script->css();
 		return $css;
 	}
-	
+	/**
+	 * Retourne le javascript utilisé dans la class de popup sélectionnée.
+	 * @return string
+	 */
 	function genereJS() {
 		return $this->_script->javascript();
 	}
-	
+	/**
+	 * Créer le code pour insérer chaque image dans la page.
+	 * @param string $str_img
+	 * @param string $nomThumbs
+	 * @param number $int_hauteur
+	 * @param number $int_largeur
+	 * @return string
+	 */
 	function genereAffichageMiniatures($str_img,$nomThumbs,$int_hauteur,$int_largeur ) {
-		$text = '<div class="box"><a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'">';
+		$text = '<div class="box">';
+		$text .= '<div class="boxInner"><a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'" class="popup-gallery'.$this->_gallerieNombre.'">';
 		$text .= '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" height="'.$int_hauteur.'" width="'.$int_largeur.'" />';
-		$text .='</a></div>';
+		$text .= '<div class="titleBox">'.$str_img.'</div>';
+		$text .='</a></div></div>';
 		return $text;
 	}
 }

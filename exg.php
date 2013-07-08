@@ -47,7 +47,7 @@ class PlgContentEXG extends JPlugin
 		$this->_absolute_path = JPATH_SITE;
 		$this->_live_site = $this->nettoyageChemin(JURI::base());
 		// Initialisation
-		$this->_debug = true;
+		$this->_debug = false;
 		// on récupère quelques paramètres
 		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);
 		$root = $this->params->get('path_root', $this->_pathRoot);
@@ -102,7 +102,7 @@ class PlgContentEXG extends JPlugin
 				$galerie_html ='galerie #'.$i;
 				$galerie->cheminsImages($this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match),$this->_pathRoot,$match);
 				//$galerie->_listeFolder = $this->listePath( $this->_absolute_path.'/'.$this->_pathRoot.'/'.$match);
-				$galerie_html .= $galerie->createUrl();
+				$galerie_html .= $galerie->insertGallerie();
 				$this->_debugMessage['galeries'][$i]=$match;
 				$i++;
 				//remplacement du texte d'appel par la galerie
@@ -119,6 +119,7 @@ class PlgContentEXG extends JPlugin
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 		$article->text .=$html_debug;
+	
 	}
 	/**
 	 * Affichage du débugage
@@ -157,17 +158,11 @@ class PlgContentEXG extends JPlugin
 		return(JFolder::files($searchpath, '.jpg'));
 	}
 	
-	private function ajouteCss($styleCss) {
+	private function ajouteCss($styleCss,$javascript) {
 		$doc = JFactory::getDocument();
-		$type = 'text/css';
 //		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
 //		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
-		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-		$doc->addScript($this->_live_site.'/plugins/content/exg/plugin_exg/magnificpopup/jquery.magnific-popup.min.js');
+//		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
 		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/magnificpopup/magnific-popup.css");
-		$doc->addStyleDeclaration($styleCss, $type);
-		// Add Javascript
-//		$doc->addScriptDeclaration($javascript, $type);
-
+		$doc->addStyleDeclaration($styleCss, 'text/css');
 	}
-}
