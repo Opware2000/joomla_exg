@@ -119,7 +119,27 @@ class PlgContentEXG extends JPlugin
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 		$article->text .=$html_debug;
-
+		$article->text .='<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/lib/jquery-2.0.3.min.js"></script>
+	<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/source/jquery.swipebox.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			/* Basic Gallery */
+			$(".swipebox").swipebox();
+		});
+	</script>';
+	}
+	
+	public function onContentAfterDisplay ($context, &$article, &$params, $limitstart=0) {
+		// Ne pas utiliser ce plugin lorsque le contenu est indexé
+		if ($context === 'com_finder.indexer')
+		{
+			return true;
+		}
+		if (strpos($article->text, $this->_tag_gallery) === false && strpos($article->text, '/'.$this->_tag_gallery) === false)
+		{
+			return true;
+		}
+		// Oui il y a bien le tag alors on continue
 	}
 	/**
 	 * Affichage du débugage
@@ -160,10 +180,7 @@ class PlgContentEXG extends JPlugin
 
 	private function ajouteCss($styleCss,$javascript) {
 		$doc = JFactory::getDocument();
-		//		$doc->addStyleSheet('templates/' . $this->template . '/css/style.css');
-		//		$doc->addScript('/templates/' . $this->template . '/js/main.js', 'text/javascript');
-		//		$doc->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/magnificpopup/magnific-popup.css");
-		$doc->addStyleDeclaration($styleCss, 'text/css');
+		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/source/swipebox.css");
+		$doc->addStyleDeclaration($styleCss, 'text/css');		
 	}
 }

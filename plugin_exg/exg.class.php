@@ -95,6 +95,7 @@ class exgClass {
 			}
 		}
 		$html .="</div>\n";
+		$html .='<script src="/joomla_3/plugins/content/exg/plugin_exg/swipebox/jquery.swipebox.js" type="text/javascript"></script>';
 		return $html;
 	}
 
@@ -146,10 +147,10 @@ class exgClass {
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner .titleBox {position: absolute;	bottom: 0;left: 0;right: 0;margin-bottom: -50px;background: #000;background: rgba(0, 0, 0, 0.5);color: #FFF;	padding: 10px;text-align: center;	-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;	-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner:hover .titleBox { margin-bottom: 0;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {margin-bottom: 0;}'."\n";
-		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;padding-bottom: 20%;}}'."\n";
-		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; padding-bottom: 20%;}}'."\n";
-		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%; padding-bottom:20%; }}'."\n";
-		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  padding-bottom: 30%;}}'."\n";
+		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;}}'."\n";
+		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; }}'."\n";
+		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%;  }}'."\n";
+		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  }}'."\n";
 		// CSS du script
 		$css .= $this->_script->css();
 		return $css;
@@ -170,8 +171,8 @@ class exgClass {
 	 * @return string
 	 */
 	function genereAffichageMiniatures($str_img,$nomThumbs,$int_hauteur,$int_largeur ) {
-		$text = '<div class="box">';
-		$text .= '<div class="boxInner"><a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'" class="popup-gallery'.$this->_gallerieNombre.'">';
+		$text  = '<div class="box">';
+		$text .= '<div class="boxInner"><a href="'.$this->_base_url.$str_img.'" title ="image : '.$str_img.'" rel="gallery-'.$this->_gallerieNombre.'" class="swipebox">';
 		$text .= '<img src="'.$this->_base_url.$this->_repminiatures.$nomThumbs.'" alt="'.$str_img.'" height="'.$int_hauteur.'" width="'.$int_largeur.'" />';
 		$text .= '<div class="titleBox">'.$str_img.'</div>';
 		$text .='</a></div></div>';
