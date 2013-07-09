@@ -24,21 +24,28 @@ defined('_JEXEC') or die('Restricted access');
 /**
  * class Popup : fournit une class pour l'utilisation de MagnificPopup dans EXG
  **/
-class magnificClass {
+class swipeboxClass {
 	protected $_gallerieNombre;
 	public $_scriptNom;
 	protected $_nombreImage;
-	function __construct($nombreGallerie, $nombreImage) {
-		$this->_scriptNom='Magnific Popup Script';
-		$this->_gallerieNombre = $nombreGallerie;
-		$this->_nombreImage = $nombreImage;
+	public $_live_site;
+	function __construct( $livesite) {
+		$this->_scriptNom='swipebox';
+		$this->_live_site = $livesite;
 	}
 	function css(){
-		$css ='';
+		$css =$this->_live_site.'/plugins/content/exg/plugin_exg/source/swipebox.css';
 		return $css ;
 	}
 	function javascript(){
-	$texte ='';
+	$texte ='<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/lib/jquery-2.0.3.min.js"></script>
+	<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/source/jquery.swipebox.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			/* Basic Gallery */
+			$(".swipebox").swipebox();
+		});
+	</script>';
 		return $texte;
 	}
 }

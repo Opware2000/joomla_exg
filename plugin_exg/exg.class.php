@@ -37,7 +37,6 @@ class exgClass {
 	private $_adaptative = true;
 	private $_gallerieNombre;
 	private $_nombreImage=array(4,4,3,2,1);
-	private $_scriptChoix ='magnificpopup';
 	private $_script;
 	/**
 	 * Constructeur php5
@@ -59,9 +58,6 @@ class exgClass {
 		$this->_debug[] = 'thumbnail width  = '.$this->_thumbWidth;
 		$this->_repminiatures = 'thumbs/'.$this->_thumbWidth.'x'.$this->_thumbHeight.'/';
 		$this->_gallerieNombre = $i;
-		include_once( dirname( __FILE__ ).'/magnificpopup.class.php' );
-		$this->_script= new magnificClass($this->_gallerieNombre, $this->_nombreImage);
-		$this->_debug[] = 'script de popup utilisé : '.$this->_script->_scriptNom;
 	}
 
 	function getDebug() {
@@ -147,12 +143,10 @@ class exgClass {
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner .titleBox {position: absolute;	bottom: 0;left: 0;right: 0;margin-bottom: -50px;background: #000;background: rgba(0, 0, 0, 0.5);color: #FFF;	padding: 10px;text-align: center;	-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;	-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner:hover .titleBox { margin-bottom: 0;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {margin-bottom: 0;}'."\n";
-		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;}}'."\n";
-		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%; }}'."\n";
-		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%;  }}'."\n";
-		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;  }}'."\n";
-		// CSS du script
-		$css .= $this->_script->css();
+		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImage[4]).'%;padding-bottom: '.(100/$this->_nombreImage[4]).'%;}}'."\n";
+		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[3]).'%;padding-bottom: '.(100/$this->_nombreImage[3]).'%; }}'."\n";
+		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImage[2]).'%;padding-bottom: '.(100/$this->_nombreImage[2]).'%;  }}'."\n";
+		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImage[1]).'%;padding-bottom: '.(100/$this->_nombreImage[1]).'%;  }}'."\n";
 		return $css;
 	}
 	/**

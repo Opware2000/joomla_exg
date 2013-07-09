@@ -32,6 +32,8 @@ class PlgContentEXG extends JPlugin
 	private   $_debug;
 	private	  $_debugMessage = array();
 	protected $_pathRoot='images';
+	protected $_script = 'swipebox';
+	protected $_popupscript;
 	//	protected $_html;
 
 	function __construct(&$subject, $params) {
@@ -88,6 +90,7 @@ class PlgContentEXG extends JPlugin
 		$galerie_html='';
 		// Include the plugin files
 		include_once( dirname( __FILE__ ).'/plugin_exg/exg.class.php' );
+		include_once( dirname( __FILE__ ).'/plugin_exg/popup.class.php');
 		$this->_debugMessage['galeries']=array();
 		$this->_parametres['ARTICLE_ID']=$article->id;
 		if(preg_match_all("@{".$this->_tag_gallery."}(.*){/".$this->_tag_gallery."}@Us", $article->text, $matches, PREG_PATTERN_ORDER) > 0)
@@ -119,14 +122,10 @@ class PlgContentEXG extends JPlugin
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement
 		$article->text .=$html_debug;
-		$article->text .='<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/lib/jquery-2.0.3.min.js"></script>
-	<script src="'.$this->_live_site.'/plugins/content/exg/plugin_exg/source/jquery.swipebox.js"></script>
-	<script type="text/javascript">
-		jQuery(function($) {
-			/* Basic Gallery */
-			$(".swipebox").swipebox();
-		});
-	</script>';
+		// on récupère les javascripts, css du popup
+		$this->_popupscript = new swipeboxClass($this->_live_site);
+		$article->text .= $this->_popupscript->javascript();
+		$this->insereCssFile($this->_popupscript->css());
 	}
 	
 	public function onContentAfterDisplay ($context, &$article, &$params, $limitstart=0) {
@@ -178,9 +177,15 @@ class PlgContentEXG extends JPlugin
 		return(JFolder::files($searchpath, '.jpg'));
 	}
 
-	private function ajouteCss($styleCss,$javascript) {
+	private function ajouteCss($styleCss) {
 		$doc = JFactory::getDocument();
-		$doc->addStyleSheet($this->_live_site."/plugins/content/exg/plugin_exg/source/swipebox.css");
-		$doc->addStyleDeclaration($styleCss, 'text/css');		
+		$doc->addStyleDeclaration($styleCss, 'text/css');	
+		unset($doc);	
+	}
+	private function insereCssFile ($fichier) {
+		$doc = JFactory::getDocument();
+		$doc->addStyleSheet($fichier);
+		unset($doc);
+		//$this->_live_site."/plugins/content/exg/plugin_exg/source/swipebox.css"
 	}
 }
