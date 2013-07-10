@@ -24,7 +24,7 @@
   				<field name="exg_tag" type="text" default="gallery" description="PLG_CONTENT_EXG_TAG_DESCRIPTION" label="PLG_CONTENT_EXG_TAG_LABEL" />
   			 	<field name="min_width" type="text" default="120" description="PLG_CONTENT_EXG_MINWIDTH_DESCRIPTION" label="PLG_CONTENT_EXG_MINWIDTH_LABEL" />
   			 	<field name="min_height" type="text" default="100" description="PLG_CONTENT_EXG_MINHEIGHT_DESCRIPTION" label="PLG_CONTENT_EXG_MINHEIGHT_LABEL" />
-  			 	<field name="adaptative" type="list" default="1" description="PLG_CONTENT_EXG_DISPLAYTHUMBNAIL_DESCRIPTION" label="PLG_CONTENT_EXG_DISPLAYTHUMBNAIL_LABEL" >
+  			 	<field name="adaptative" type="radio" class="btn-group" default="1" description="PLG_CONTENT_EXG_DISPLAYTHUMBNAIL_DESCRIPTION" label="PLG_CONTENT_EXG_DISPLAYTHUMBNAIL_LABEL" >
  					<option value="0">PLG_CONTENT_EXG_STRICSIZE</option>
                     <option value="1">PLG_CONTENT_EXG_ADAPTATIVESIZE</option>
                 </field>
@@ -35,6 +35,7 @@
   			 	<field name="num_device_laptop" type="text" default="3" description="PLG_CONTENT_EXG_NUMDEVICELAPTOP_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICELAPTOP_LABEL" />
   			 	<field name="num_device_tablet" type="text" default="2" description="PLG_CONTENT_EXG_NUMDEVICETABLET_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICETABLET_LABEL" />
   			 	<field name="num_device_smartphone" type="text" default="1" description="PLG_CONTENT_EXG_NUMDEVICESMARTPHONE_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICESMARTPHONE_LABEL" />
+  			 	<field name="thumb_margin" type="text" default="10" description="PLG_CONTENT_EXG_THUMBMARGIN_DESCRIPTION" label="PLG_CONTENT_EXG_THUMBMARGIN_LABEL" />
   			 </fieldset>
   		</fields>
   	</config>	  

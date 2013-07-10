@@ -57,6 +57,7 @@ class exgClass {
 		$this->_thumbWidth = $params['THUMB_WIDTH'];
 		$this->_nombreImageParLigne = $params['RESPONSIVE_PARAMETERS'];
 		$this->_adaptative = $params['ADAPTATIVE'];
+		$this->_margin = $params['MARGIN'];
 		$this->_debug[] = 'thumbnail height = '.$this->_thumbHeight;
 		$this->_debug[] = 'thumbnail width  = '.$this->_thumbWidth;
 		$this->_debug[] = 'responsive parameters = '.print_r($this->_nombreImageParLigne, true);

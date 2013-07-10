@@ -64,6 +64,7 @@ class PlgContentEXG extends JPlugin
 				$this->checkNumeric($this->params->get('num_device_phone',1),1)			// de smartphone
 		);
 		$adaptative = $this->params->get('adaptative',1);
+		$margin = $this->params->get('thumb_margin',10);
 		//vérification que le tag est correctement formaté
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
@@ -75,7 +76,8 @@ class PlgContentEXG extends JPlugin
 				'THUMB_WIDTH'=>$miniatureLargeur,
 				'THUMB_HEIGHT'=>$miniatureHauteur,
 				'RESPONSIVE_PARAMETERS' => $nombreImageParLigne,
-				'ADAPTATIVE' => $adaptative
+				'ADAPTATIVE' => $adaptative,
+				'MARGIN' => $margin
 		);
 		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
 		//$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
