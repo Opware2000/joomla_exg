@@ -57,7 +57,7 @@ class PlgContentEXG extends JPlugin
 		$miniatureHauteur = $this->params->get('min_height',100);	// taille des miniatures à générer
 		$miniatureLargeur = $this->params->get('min_width',100);	// taille des miniatures à générer
 		$nombreImageParLigne = array (						// récupère le nombre d'images à afficher
-				$this->checkNumeric($this->params->get('num_device_screen',4),4),			// sur chaque ligne de la galerie
+				$this->checkNumeric($this->params->get('num_device_bigscreen',5),5),			// sur chaque ligne de la galerie
 				$this->checkNumeric($this->params->get('num_device_screen',4),4),			// pour les écrans d'ordi
 				$this->checkNumeric($this->params->get('num_device_laptop',3),3),			// d'ordis portables
 				$this->checkNumeric($this->params->get('num_device_tablet',2),2),			// de tablettes
@@ -134,6 +134,11 @@ class PlgContentEXG extends JPlugin
 				unset( $galerie );
 			}
 		}
+		$styleCss = '<!-- Enable media queries for old IE -->
+<!--[if lt IE 9]>
+   <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->'."\n";
+		$this->ajouteCss($styleCss);
 		//traitement si débug.
 		$html_debug = $this->showDebug();
 		// on effectue le remplacement

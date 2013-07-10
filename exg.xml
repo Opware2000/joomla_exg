@@ -30,6 +30,7 @@
                 </field>
   			 	</fieldset>
   			 	<fieldset name="EXG_GALLERY_RESPONSIVE_PARAMETERS">
+  			 	<field name="num_device_bigscreen" type="text" default="4" description="PLG_CONTENT_EXG_NUMDEVICESBIGCREEN_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICEBIGSCREEN_LABEL" />
   			 	<field name="num_device_screen" type="text" default="4" description="PLG_CONTENT_EXG_NUMDEVICESCREEN_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICESCREEN_LABEL" />
   			 	<field name="num_device_laptop" type="text" default="3" description="PLG_CONTENT_EXG_NUMDEVICELAPTOP_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICELAPTOP_LABEL" />
   			 	<field name="num_device_tablet" type="text" default="2" description="PLG_CONTENT_EXG_NUMDEVICETABLET_DESCRIPTION" label="PLG_CONTENT_EXG_NUMDEVICETABLET_LABEL" />

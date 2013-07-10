@@ -38,6 +38,7 @@ class exgClass {
 	private $_gallerieNombre;
 	private $_nombreImageParLigne=array(4,4,3,2,1);
 	private $_script;
+	private $_margin = 10;
 	/**
 	 * Constructeur php5
 	 *
@@ -134,22 +135,35 @@ class exgClass {
 	 */
 	function genereCss() {
 		// CSS de l'affichage des miniatures
-		$css  ='#gallery_'.$this->_gallerieNombre." {width:100%; clear:both;font: 10px/13px 'Lucida Sans',sans-serif;   overflow: hidden;}"."\n";
-		$css .='#gallery_'.$this->_gallerieNombre.' {overflow: hidden; margin: 10px;}'."\n";
-		$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImageParLigne[0]).'%; padding-bottom: 20%;}'."\n";
+		$css  ='#gallery_'.$this->_gallerieNombre." {width:100%; clear:both;font: 10px/13px 'Lucida Sans',sans-serif;   overflow: hidden; margin : '.$this->_margin.'px;}"."\n";
+		if($this->_adaptative == true){
+			$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImageParLigne[0]).'%; padding-bottom:'.(100/($this->_nombreImageParLigne[0]+1)).'%; margin-bottom:'.$this->_margin.'px;}'."\n";
+		} else {
+			$css .='#gallery_'.$this->_gallerieNombre.' .box {float: left;position: relative; width: '.(100/$this->_nombreImageParLigne[0]).'%; padding-bottom:'.($this->_thumbHeight).'px; margin-bottom:'.$this->_margin.'px;}'."\n";
+		}
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner {	position: absolute;	left: 10px;right: 10px;top: 10px;bottom: 10px;overflow: hidden;}'."\n";
 		if($this->_adaptative == true){
 			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner img {width: 100%;}'."\n";
 		} else {
 			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner a {text-align:center; margin-left:auto; margin-right:auto; display:block;}'."\n";
+			$css .='#gallery_'.$this->_gallerieNombre.' .boxInner  {height:'.$this->_thumbHeight.'px;}'."\n";
+				
 		}
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner .titleBox {position: absolute;	bottom: 0;left: 0;right: 0;margin-bottom: -50px;background: #000;background: rgba(0, 0, 0, 0.5);color: #FFF;	padding: 10px;text-align: center;	-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;	-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' .boxInner:hover .titleBox { margin-bottom: 0;}'."\n";
 		$css .='#gallery_'.$this->_gallerieNombre.' body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {margin-bottom: 0;}'."\n";
-		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {width: '.(100/$this->_nombreImageParLigne[4]).'%;padding-bottom: '.(100/$this->_nombreImageParLigne[4]).'%;}}'."\n";
-		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImageParLigne[3]).'%;padding-bottom: '.(100/$this->_nombreImageParLigne[3]).'%; }}'."\n";
-		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box {  width:'.(100/$this->_nombreImageParLigne[2]).'%;padding-bottom: '.(100/$this->_nombreImageParLigne[2]).'%;  }}'."\n";
-		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box { width: '.(100/$this->_nombreImageParLigne[1]).'%;padding-bottom: '.(100/$this->_nombreImageParLigne[1]).'%;  }}'."\n";
+		if($this->_adaptative == true){
+			$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[4]).'%;padding-bottom: '.(100/($this->_nombreImageParLigne[4])).'%;}}'."\n";
+			$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[3]).'%;padding-bottom: '.(100/($this->_nombreImageParLigne[3])).'%; }}'."\n";
+			$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box { position: relative; width:'.(100/$this->_nombreImageParLigne[2]).'%;padding-bottom: '.(100/($this->_nombreImageParLigne[2]+1)).'%; }}'."\n";
+			$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[1]).'%;padding-bottom: '.(100/($this->_nombreImageParLigne[1]+1)).'%;    }}'."\n";
+			
+		} else {
+		$css .='@media only screen and (max-width : 480px) {/* Smartphone view: 1 tile */ #gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[4]).'%;padding-bottom: '.($this->_thumbHeight).'px; margin-bottom:'.$this->_margin.'px;}}'."\n";
+		$css .='@media only screen and (max-width : 650px) and (min-width : 481px)   {/* Tablet view: 2 tiles */#gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[3]).'%;padding-bottom: '.($this->_thumbHeight).'px; margin-bottom:'.$this->_margin.'px; }}'."\n";
+		$css .='@media only screen and (max-width : 1050px) and (min-width : 651px)  {/* Small desktop / ipad view: 3 tiles */ #gallery_'.$this->_gallerieNombre.' .box { position: relative; width:'.(100/$this->_nombreImageParLigne[2]).'%;padding-bottom: '.($this->_thumbHeight).'px; margin-bottom:'.$this->_margin.'px;  }}'."\n";
+		$css .='@media only screen and (max-width : 1290px) and (min-width : 1051px) {/* Medium desktop: 4 tiles */   #gallery_'.$this->_gallerieNombre.' .box {position: relative; width: '.(100/$this->_nombreImageParLigne[1]).'%;padding-bottom: '.($this->_thumbHeight).'px; margin-bottom:'.$this->_margin.'px;   }}'."\n";
+		}
 		return $css;
 	}
 	/**
