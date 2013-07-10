@@ -51,16 +51,32 @@ class PlgContentEXG extends JPlugin
 		// Initialisation
 		$this->_debug = false;
 		// on récupère quelques paramètres
-		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);
-		$root = $this->params->get('path_root', $this->_pathRoot);
-		$root = $this->nettoyageChemin($root);
-		$miniatureHauteur = $this->params->get('min_height',100);
-		$miniatureLargeur = $this->params->get('min_width',100);
+		$tag  = $this->params->get('exg_tag', $this->_tag_gallery);	// tag utilisé par la galerie
+		$root = $this->params->get('path_root', $this->_pathRoot);	// chemin des images à afficher
+		$root = $this->nettoyageChemin($root);						// enlève les / en trop
+		$miniatureHauteur = $this->params->get('min_height',100);	// taille des miniatures à générer
+		$miniatureLargeur = $this->params->get('min_width',100);	// taille des miniatures à générer
+		$nombreImageParLigne = array (						// récupère le nombre d'images à afficher
+				$this->checkNumeric($this->params->get('num_device_screen',4),4),			// sur chaque ligne de la galerie
+				$this->checkNumeric($this->params->get('num_device_screen',4),4),			// pour les écrans d'ordi
+				$this->checkNumeric($this->params->get('num_device_laptop',3),3),			// d'ordis portables
+				$this->checkNumeric($this->params->get('num_device_tablet',2),2),			// de tablettes
+				$this->checkNumeric($this->params->get('num_device_phone',1),1)			// de smartphone
+		);
+		$adaptative = $this->params->get('adaptative',1);
 		//vérification que le tag est correctement formaté
 		if(is_string($tag) && ctype_alnum($tag)) {
 			$this->_tag_gallery = $tag;
 		}
-		$this->_parametres = array('TAG'=> $this->_tag_gallery, 'URL' => $this->_live_site, 'PATH' => $this->_absolute_path,'THUMB_WIDTH'=>$miniatureLargeur, 'THUMB_HEIGHT'=>$miniatureHauteur);
+		$this->_parametres = array(
+				'TAG'=> $this->_tag_gallery,
+				'URL' => $this->_live_site,
+				'PATH' => $this->_absolute_path,
+				'THUMB_WIDTH'=>$miniatureLargeur,
+				'THUMB_HEIGHT'=>$miniatureHauteur,
+				'RESPONSIVE_PARAMETERS' => $nombreImageParLigne,
+				'ADAPTATIVE' => $adaptative
+		);
 		$this->_debugMessage['parametres_initiaux']=$this->_parametres;
 		//$this->_debugMessage['parametres_plugin']=array('tag'=>$tag, 'root'=>$root);
 		//initialisation
@@ -127,7 +143,7 @@ class PlgContentEXG extends JPlugin
 		$article->text .= $this->_popupscript->javascript();
 		$this->insereCssFile($this->_popupscript->css());
 	}
-	
+
 	public function onContentAfterDisplay ($context, &$article, &$params, $limitstart=0) {
 		// Ne pas utiliser ce plugin lorsque le contenu est indexé
 		if ($context === 'com_finder.indexer')
@@ -179,13 +195,20 @@ class PlgContentEXG extends JPlugin
 
 	private function ajouteCss($styleCss) {
 		$doc = JFactory::getDocument();
-		$doc->addStyleDeclaration($styleCss, 'text/css');	
-		unset($doc);	
+		$doc->addStyleDeclaration($styleCss, 'text/css');
+		unset($doc);
 	}
 	private function insereCssFile ($fichier) {
 		$doc = JFactory::getDocument();
 		$doc->addStyleSheet($fichier);
 		unset($doc);
 		//$this->_live_site."/plugins/content/exg/plugin_exg/source/swipebox.css"
+	}
+	private function checkNumeric($var, $default) {
+		if(is_numeric($var)) {
+			return ($var);
+		}
+		else {$this->_debug[]='Erreur de type de paramètre, insérer une valeur numérique';return ($default);
+		}
 	}
 }
