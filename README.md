@@ -1,6 +1,8 @@
 joomla_exg
 ==========
 
+This plugin is no longer maintained.
+
 Plugin for a picture content gallery for Joomla CMS
 
 # Ce qu'est Easy eXtended Gallery for Joomla
